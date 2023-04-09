@@ -18,11 +18,8 @@ function CommunityAll() {
   })
   const { setMyAuth } = useContext(AuthContext)
   const navigate = useNavigate()
-  const [users, setUsers] = useState([]) //要保持此狀態一直是陣列！
-  const [shownPassword, setHidePassword] = useState(false)
   const { myAuth, logout } = useContext(AuthContext)
 
-  const names = ['Alice', 'Bob', 'Charlie', 'David'];
 
   const [cmmData, setCmmData] = useState({ totalRows: 0, CMA: [] });
 
