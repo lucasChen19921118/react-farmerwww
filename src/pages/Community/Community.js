@@ -27,6 +27,7 @@ function Community() {
     const [shownPassword, setHidePassword] = useState(false)
     const { myAuth, logout } = useContext(AuthContext)
     const [keyword, setKeyword] = useState('')
+    const [page, setPage] = useState(1);
 
 
 
@@ -34,13 +35,20 @@ function Community() {
         totalRows: 0,
         page: 0,
         totalPages: 0,
-        CMA: []
+        CMA: [],
+        queryObj: {},
     });
 
-    const getListData = async (page = 1) => {
+    const [searchTerm, setSearchTerm] = useState('');
+
+    const getListData = async (
+        page = 1,
+        queryObj,
+    ) => {
         const response = await axios.get(CMMA, {
             params: {
-                page
+                page,
+                queryObj,
             }
         });
         // response.data 會依據回應的檔頭作解析, JSON
@@ -52,27 +60,30 @@ function Community() {
     useEffect(() => {
         // 在component mount時從API獲取數據
         async function fetchData() {
-            const response = await fetch('http://localhost:3033/community/api');
+            const response = await fetch(`${CMMA}?search=${searchTerm}&page=${page}`);
             const data = await response.json();
             setCmmData(Array.isArray(data) ? data : []);
             setCmmData(data);
+            console.log(data)
         }
         fetchData();
-    }, []);
+    }, [searchTerm,page]);
 
     useEffect(() => {
         // 設定功能
         console.log("useEffect--");
-        getListData(+usp.get("page"));
+        getListData(
+            +usp.get("page"),
+            +usp.get("searchTerm"),
+            
+        )
 
         return () => {
             // 解除功能
         };
-    }, [location.search]);
+    }, [location]);
     //用useEffect最好是基本數值
 
-    const [searchTerm, setSearchTerm] = useState('');
-    const [data, setData] = useState([]);
 
     // const handleSearchChange = event => {
     //     setSearchTerm(event.target.value);
@@ -82,24 +93,15 @@ function Community() {
     //     item.community_header.toLowerCase().includes(searchTerm.toLowerCase())
     // );
 
-    useEffect(() => {
-        async function fetchData() {
-            const response = await fetch(`http://localhost:3033/community/data?searchTerm=${searchTerm}`);
-            const data = await response.json();
-            setData(data);
-        }
-
-        fetchData();
-    }, [searchTerm]);
-
-    function handleChange(event) {
-        setSearchTerm(event.target.value);
+    function handleSearch() {
+        // 按下查詢按鈕時，觸發查詢
+        setSearchTerm(document.getElementById('keyword').value);
     }
 
-
-
-
-
+    const handleClearClick = () => {
+        setSearchTerm("");
+        document.getElementById('keyword').value = ""
+    };
 
     return (
         <div className='m-session d-flex justify-content-center pb-5  cm-session'>
@@ -115,17 +117,24 @@ function Community() {
                         </div>
                     </div>
                     {searchTerm && searchTerm.length > 1 ?
-                    ""
+                        <div className='mt-4 login-span fw-bolder'>
+                        <CommPagination
+                                page={cmmData.page}
+                                totalPages={cmmData.totalPages}
+                                getListData={getListData}
+                                queryObj={searchTerm}
+                        />
+                        </div>
                         :
                         <div className='mt-4 login-span fw-bolder'>
                             <CommPagination
                                 page={cmmData.page}
                                 totalPages={cmmData.totalPages}
                                 getListData={getListData}
+                                queryObj={searchTerm}
                             />
-                        </div>   
+                        </div>
                     }
-                 
                     <div className='cm-select-bar  d-flex justify-align-content-between align-items-center gap-2 mt-3 ms-2 me-2 text-center '>
                         <div className='cm-select-bar-btn  d-flex justify-content-center align-items-center'>
                             <p>文章排列方式:</p>
@@ -143,26 +152,42 @@ function Community() {
                 {/* 文章卡片 */}
                 {/* 擺放卡片位置的地方vvvv */}
                 <div>
-                    <input type="text" placeholder="輸入文章關鍵字" value={searchTerm} onChange={(e) => {
-                        setSearchTerm(e.target.value)
-                        if (e.target.value === '') {
-                            setKeyword('')
-                        }
-                    }}
-                        onKeyDown={(e) => {
-                            if (e.key === 'Enter') {
-                                setKeyword(searchTerm)
-                            }
-                        }}
-                    />
-                    {searchTerm && searchTerm.length > 1 ?
-                        data == "" ? "查無資料喔" :
-                            <ul>
-                                {data.map(item => (
-                                    <li key={item.sid}>{item.community_header},{item.member_name}</li>
-                                ))}
-                            </ul>
-                        :
+                    <div className='P-search cm-search'>
+                        <input 
+                        className='cm-pbt'
+                        type="text"
+                        id='keyword'
+                        placeholder="輸入文章關鍵字"
+                        // value={searchTerm}
+                    //     onChange={(e) => {
+                    //     setSearchTerm(e.target.value)
+                    //     if (e.target.value === '') {
+                    //         setKeyword('')
+                    //     }
+                    // }}
+                    //     onKeyDown={(e) => {
+                    //         if (e.key === 'Enter') {
+                    //             setKeyword(searchTerm)
+                    //         }
+                    //     }}
+                        />
+                        {searchTerm ?
+                            <button
+                            className='cm-pbt cm-clear'
+                            onClick={handleClearClick}
+                        >
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                            :
+                            ""}
+                      
+                        <button
+                            className='cm-pbt fs-6'
+                        onClick={handleSearch}
+                    >
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </button>
+                    </div>
                         <div className='cm-artical-session d-flex justify-content-center align-items-start  col-12 h-100 mt-5 gap-5 flex-wrap'>
                             {cmmData.CMA.map(row => (
                                 <div key={row.sid} className='cm-artical-card mt-1'>
@@ -234,7 +259,6 @@ function Community() {
 
                             {/* 文章卡片 */}
                         </div>
-                    }
                 </div>
 
             </div>

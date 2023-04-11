@@ -344,6 +344,25 @@ width: 450px;
     margin-top: 5px;
 }
 
+.cm-search{
+width: 300px;
+border-radius: 20px !important;
+}
+
+.cm-clear{
+    width: 30px !important;
+    background: transparent !important;
+    position: absolute;
+    /* border: 3px solid red !important; */
+    top: 268px;
+    left: 365px;
+    color: #A35D73 !important;
+}
+
+.cm-clear:hover{
+color: #1b6300 !important;
+}
+
 @media (max-width: 576px) {
 .cm-hide{
     display: none;
@@ -353,7 +372,5 @@ width: 450px;
     margin: 0px !important;
     padding: 0px !important;
 }
-
-
 
 }
