@@ -118,7 +118,7 @@ transition: .5s;
 .cm-artical-innerimg{
     width: 480px;
     height: 320px;
-    border: 1px solid transparent;
+    border: 0px solid transparent;
     object-fit: cover;
 }
 
@@ -354,13 +354,42 @@ border-radius: 20px !important;
     background: transparent !important;
     position: absolute;
     /* border: 3px solid red !important; */
-    top: 268px;
-    left: 365px;
+    top: 0px;
+    left: 200px;
     color: #A35D73 !important;
+}
+
+.cm-nfound {
+    margin-bottom: 100px;
+    margin-top: 25px;
+    padding-top: 100px;
+    padding-bottom: 100px;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.cm-hideS{
+  width: 350px;
+  padding: 10px;
+  overflow:hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .cm-clear:hover{
 color: #1b6300 !important;
+}
+
+.cm-blur{
+  /* backdrop-filter: blur(100px);
+  -moz-backdrop-filter: blur(10px); */
+  /* border: 1px solid rgba(128, 128, 128, 0.422); */
+  background-image: url(/public/Textures/wallpaperLight.png);
+  background-size: 600px;
+  background-position: center;
+  border-radius: 20px;
+  width: 880px;
+  transition: .5s;
 }
 
 @media (max-width: 576px) {

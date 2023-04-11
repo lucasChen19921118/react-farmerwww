@@ -2,7 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 
 
-function CommPagination({ page, totalPages, getListData, queryObj }) {
+function CommPagination({ queryObj, page, totalPages, getListData, }) {
   const navigate = useNavigate();
   return (
     <div className="row d-flex flex-row justify-content-center w-100">
@@ -10,14 +10,12 @@ function CommPagination({ page, totalPages, getListData, queryObj }) {
         <nav aria-label="Page navigation example" className="Pagination d-flex justify-content-center">
           <ul className="P-page C-pagination d-flex justify-content-center gap-3 list-unstyled font-M">
             
-              {`${page}` === '1' ? ""
+            {`${page}` === '1' ?
+              ""
               :
               <li>
                 <a className="page-link" href="#/" onClick={(e) => {
                   e.preventDefault();
-                  queryObj?
-                    navigate(`?page=${page - 1}`)
-                    :
                   navigate(`?search=${queryObj}&page=${page - 1}`)
                 }}>
                   <li className="fa-solid fa-angle-left"></li>
@@ -38,7 +36,7 @@ function CommPagination({ page, totalPages, getListData, queryObj }) {
                   !queryObj ?
                   navigate(`?page=${p}`)
                     :
-                  navigate(`?search=${queryObj}&page=${p}`)
+                    navigate(`?search=${queryObj}&page=${p}`)
                 }}>
                   {p}
                 </a>
@@ -50,9 +48,6 @@ function CommPagination({ page, totalPages, getListData, queryObj }) {
               <li>
                 <a className="page-link" href="#/" onClick={(e) => {
                   e.preventDefault();
-                  queryObj ?
-                  navigate(`?page=${page + 1}`)
-                    :
                   navigate(`?search=${queryObj}&page=${page + 1}`)
                 }}>
                   <li className="fa-solid fa-angle-right"></li>

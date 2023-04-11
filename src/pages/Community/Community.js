@@ -36,19 +36,19 @@ function Community() {
         page: 0,
         totalPages: 0,
         CMA: [],
-        queryObj: {},
+        search: {},
     });
 
     const [searchTerm, setSearchTerm] = useState('');
 
     const getListData = async (
         page = 1,
-        queryObj,
+        search,
     ) => {
         const response = await axios.get(CMMA, {
             params: {
                 page,
-                queryObj,
+                search,
             }
         });
         // response.data 會依據回應的檔頭作解析, JSON
@@ -67,17 +67,16 @@ function Community() {
             console.log(data)
         }
         fetchData();
-    }, [searchTerm,page]);
+    }, [searchTerm, page]);
 
     useEffect(() => {
         // 設定功能
         console.log("useEffect--");
         getListData(
             +usp.get("page"),
-            +usp.get("searchTerm"),
-            
-        )
+            usp.get("search"),
 
+        )
         return () => {
             // 解除功能
         };
@@ -93,20 +92,24 @@ function Community() {
     //     item.community_header.toLowerCase().includes(searchTerm.toLowerCase())
     // );
 
+     // 按下查詢按鈕時，觸發查詢
     function handleSearch() {
-        // 按下查詢按鈕時，觸發查詢
         setSearchTerm(document.getElementById('keyword').value);
     }
 
+     // 清空查詢結果
     const handleClearClick = () => {
         setSearchTerm("");
         document.getElementById('keyword').value = ""
     };
 
     return (
-        <div className='m-session d-flex justify-content-center pb-5  cm-session'>
+        <div
+            className='m-session d-flex justify-content-center pb-5  cm-session'
+
+        >
             {/* 功能列 */}
-            <div className='cm-container d-flex flex-column  col-10 h-100 mt-4 cm-margin'>
+            <div className='cm-container d-flex flex-column  col-10 h-100 mt-4 cm-margin align-items-center justify-content-center'>
                 <div className='w-100 d-flex justify-content-between'>
                     <div className='cm-select-bar d-flex justify-align-content-between align-items-center gap-2 mt-3 ms-2 me-2 text-center '>
                         <div className='cm-select-bar-btn d-flex justify-content-center align-items-center'>
@@ -116,16 +119,7 @@ function Community() {
                             <p className='cm-pbt'>我的文章</p>
                         </div>
                     </div>
-                    {searchTerm && searchTerm.length > 1 ?
-                        <div className='mt-4 login-span fw-bolder'>
-                        <CommPagination
-                                page={cmmData.page}
-                                totalPages={cmmData.totalPages}
-                                getListData={getListData}
-                                queryObj={searchTerm}
-                        />
-                        </div>
-                        :
+                    {cmmData.totalRows !== 0 ?
                         <div className='mt-4 login-span fw-bolder'>
                             <CommPagination
                                 page={cmmData.page}
@@ -134,9 +128,11 @@ function Community() {
                                 queryObj={searchTerm}
                             />
                         </div>
+                        :
+                        ""
                     }
-                    <div className='cm-select-bar  d-flex justify-align-content-between align-items-center gap-2 mt-3 ms-2 me-2 text-center '>
-                        <div className='cm-select-bar-btn  d-flex justify-content-center align-items-center'>
+                    <div className='cm-select-bar  d-flex justify-align-content-between align-items-center gap-2 mt- ms-2 me-2 text-center '>
+                        {/* <div className='cm-select-bar-btn  d-flex justify-content-center align-items-center'>
                             <p>文章排列方式:</p>
                         </div>
                         <div className='cm-select-bar-btn d-flex justify-content-center align-items-center'>
@@ -144,121 +140,148 @@ function Community() {
                         </div>
                         <div className='cm-select-bar-btn d-flex justify-content-center align-items-center'>
                             <p className='cm-pbt'>熱門迴響</p>
+                        </div> */}
+
+                        <div className='justify-content-start d-flex ms-3'>
+                            <div className='P-search cm-search position-relative'>
+                                <input
+                                    className='cm-pbt ps-3'
+                                    type="text"
+                                    id='keyword'
+                                    placeholder="輸入文章關鍵字"
+                                // value={searchTerm}
+                                //     onChange={(e) => {
+                                //     setSearchTerm(e.target.value)
+                                //     if (e.target.value === '') {
+                                //         setKeyword('')
+                                //     }
+                                // }}
+                                //     onKeyDown={(e) => {
+                                //         if (e.key === 'Enter') {
+                                //             setKeyword(searchTerm)
+                                //         }
+                                //     }}
+                                />
+                                {searchTerm ?
+                                    <button
+                                        className='cm-pbt cm-clear'
+                                        onClick={handleClearClick}
+                                    >
+                                        <i class="fa-solid fa-xmark"></i>
+                                    </button>
+                                    :
+                                    ""}
+
+                                <button
+                                    className='cm-pbt fs-6'
+                                    onClick={handleSearch}
+                                >
+                                    <i class="fa-solid fa-magnifying-glass"></i>
+                                </button>
+                            </div>
                         </div>
+
                     </div>
                 </div>
                 {/* 功能列 結束*/}
 
                 {/* 文章卡片 */}
                 {/* 擺放卡片位置的地方vvvv */}
-                <div>
-                    <div className='P-search cm-search'>
-                        <input 
-                        className='cm-pbt'
-                        type="text"
-                        id='keyword'
-                        placeholder="輸入文章關鍵字"
-                        // value={searchTerm}
-                    //     onChange={(e) => {
-                    //     setSearchTerm(e.target.value)
-                    //     if (e.target.value === '') {
-                    //         setKeyword('')
-                    //     }
-                    // }}
-                    //     onKeyDown={(e) => {
-                    //         if (e.key === 'Enter') {
-                    //             setKeyword(searchTerm)
-                    //         }
-                    //     }}
-                        />
-                        {searchTerm ?
-                            <button
-                            className='cm-pbt cm-clear'
-                            onClick={handleClearClick}
-                        >
-                            <i class="fa-solid fa-xmark"></i>
-                        </button>
+                <div className='d-flex flex-column justify-content-center'>
+                    <div className='cm-artical-session d-flex justify-content-center align-items-start  col-12 h-100 mt-4 gap-5 flex-wrap '>
+                        {searchTerm && cmmData.totalRows === 0 ?
+
+                            <div className="P-main cm-nfound  d-flex justify-content-center align-items-start gap-2  cm-blur">
+                                <img
+                                    className="d-none d-md-block"
+                                    src="./../../Images/notFound.png"
+                                    width="200px"
+                                    alt=""
+                                />
+                                <div className="mt-5 d-flex flex-column justify-content-center text-center">
+                                    <h3 className="P-notfound font-M">Sorry！ 找不到任何有關</h3>
+                                    <p className="P-notfound cm-hideS font-M fs-2 text-success">{searchTerm}</p>
+                                </div>
+                                <img
+                                    className="d-none d-md-block"
+                                    src="./../../Images/notFound.png"
+                                    width="200px"
+                                    alt=""
+                                />
+                            </div>
                             :
                             ""}
-                      
-                        <button
-                            className='cm-pbt fs-6'
-                        onClick={handleSearch}
-                    >
-                            <i class="fa-solid fa-magnifying-glass"></i>
-                        </button>
-                    </div>
-                        <div className='cm-artical-session d-flex justify-content-center align-items-start  col-12 h-100 mt-5 gap-5 flex-wrap'>
-                            {cmmData.CMA.map(row => (
-                                <div key={row.sid} className='cm-artical-card mt-1'>
-                                    <div className='cm-artical-innerimg' >
-                                        <img src={`${HOST}/images/community/` + `${row.community_picture1}`}></img>
-                                    </div>
-                                    <div className='cm-member-info w-100 d-flex align-items-end ms-3'>
-                                        <div className='cm-member-ava'>
-                                            <img src={`${HOST}/images/avatar/` + `${row.member_img}`}></img>
-                                        </div>
-                                        <div className='d-flex flex-column ms-2 w-75 '>
-                                            <div className='cm-member-detail d-flex justify-content-between'>
-                                                <span className='fs-6'>BY {row.member_name}</span>
-                                                <span className='fs-6'>
-                                                    發表於:
-                                                    {dayjs(row.community_created_at).format("YYYY-MM-DD")}
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
 
-                                    {/* 點讚區 */}
-
-                                    <div className='d-flex justify-content-around cm-like-area'>
-                                        <div className='cm-like-comments w-50 m-4 d-flex gap-3'>
-                                            <div className='d-flex gap-2 align-items-center'>
-                                                <img src='/icons/like.png'></img>
-                                                <div className='cm-like-span text-success fs-6'>(23)</div>
-                                            </div>
-
-                                            <div className='d-flex gap-2 align-items-center'>
-                                                <img src='/icons/comment.png'></img>
-                                                <div className='cm-like-span  fs-6'>(20)</div>
-                                            </div>
-                                        </div>
-
-
-                                        <div className='cm-like-comments w-50 m-4 d-flex align-items-center justify-content-end gap-3'>
-                                            <div className='d-flex gap-2 align-items-center'>
-                                                <img src='/icons/instagram.png'></img>
-                                            </div>
-
-                                            <div className='d-flex gap-2 align-items-center'>
-                                                <img src='/icons/facebook.png'></img>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    {/* 文章 */}
-                                    <div className='cm-arti-show d-flex justify-content-around w-100 h-100 bg-white'>
-                                        <div className='cm-artical-contain-area w-100 h-100 bg-white d-flex'>
-                                            <div className='cm-artical ms-5 me-5 mt-4 w-100'>
-                                                <h3>{row.community_header}</h3>
-                                                <span className='fs-6'>{row.community_contain}</span>
-                                                <span className='fs-5 text-warning'>
-                                                    <a className='text-success' href={`http://localhost:3000/community/` + `${row.sid}`}>....[點我看更多]</a>
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
-
-
-
-
+                        {cmmData.CMA.map(row => (
+                            <div key={row.sid} className='cm-artical-card mt-1'>
+                                <div className='cm-artical-innerimg' >
+                                    <img src={`${HOST}/images/community/` + `${row.community_picture1}`}></img>
                                 </div>
-                            ))}
+                                <div className='cm-member-info w-100 d-flex align-items-end ms-3'>
+                                    <div className='cm-member-ava'>
+                                        <img src={`${HOST}/images/avatar/` + `${row.member_img}`}></img>
+                                    </div>
+                                    <div className='d-flex flex-column ms-2 w-75 '>
+                                        <div className='cm-member-detail d-flex justify-content-between'>
+                                            <span className='fs-6'>BY {row.member_name}</span>
+                                            <span className='fs-6'>
+                                                發表於:
+                                                {dayjs(row.community_created_at).format("YYYY-MM-DD")}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* 點讚區 */}
+
+                                <div className='d-flex justify-content-around cm-like-area'>
+                                    <div className='cm-like-comments w-50 m-4 d-flex gap-3'>
+                                        <div className='d-flex gap-2 align-items-center'>
+                                            <img src='/icons/like.png'></img>
+                                            <div className='cm-like-span text-success fs-6'>(23)</div>
+                                        </div>
+
+                                        <div className='d-flex gap-2 align-items-center'>
+                                            <img src='/icons/comment.png'></img>
+                                            <div className='cm-like-span  fs-6'>(20)</div>
+                                        </div>
+                                    </div>
+
+
+                                    <div className='cm-like-comments w-50 m-4 d-flex align-items-center justify-content-end gap-3'>
+                                        <div className='d-flex gap-2 align-items-center'>
+                                            <img src='/icons/instagram.png'></img>
+                                        </div>
+
+                                        <div className='d-flex gap-2 align-items-center'>
+                                            <img src='/icons/facebook.png'></img>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* 文章 */}
+                                <div className='cm-arti-show d-flex justify-content-around w-100 h-100 bg-white'>
+                                    <div className='cm-artical-contain-area w-100 h-100 bg-white d-flex'>
+                                        <div className='cm-artical ms-5 me-5 mt-4 w-100'>
+                                            <h3>{row.community_header}</h3>
+                                            <span className='fs-6'>{row.community_contain}</span>
+                                            <span className='fs-5 text-warning'>
+                                                <a className='text-success' href={`http://localhost:3000/community/` + `${row.sid}`}>....[點我看更多]</a>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
 
 
 
-                            {/* 文章卡片 */}
-                        </div>
+
+                            </div>
+                        ))}
+
+
+
+                        {/* 文章卡片 */}
+                    </div>
                 </div>
 
             </div>
