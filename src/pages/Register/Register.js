@@ -202,40 +202,11 @@ const Register = () => {
 
     const res = await axios.post('http://localhost:3033/register/add', fields)
 
-    // 測試寄送郵件功能
-    // const transporter = nodemailer.createTransport({
-    //   service: 'gmail',
-    //   auth: {
-    //     user: 'farmerwww33@gmail.com',
-    //     pass: '33farmerwww'
-    //   }
-    // });
-
-    // // 寄信的內容
-    // const message = {
-    //   from: 'farmerwww33@gmail.com',
-    //   to: fields.member_email,
-    //   subject: '[註冊通知] 小農遊會員註冊成功',
-    //   html: `<p><strong>哈囉！</strong> ${fields.member_nickname}
-    //   </p><p><strong>Email:</strong> ${fields.member_email}</p>
-    //   <p>您已經成功註冊小農遊帳號囉！</p>
-    //   <p>歡迎您盡情體驗優質農業課程及商品喔！</p>
-    //   <p><strong>Message:</strong> ${message}</p>`
-    // };
-
-    // try {
-    //   // Send the email using the Nodemailer transporter object
-    //   await transporter.sendMail(message);
-    //   alert('Email sent successfully!');
-    // } catch (error) {
-    //   console.error(error);
-    //   alert('Failed to send email.');
-    // }
-
     if (res.data.message = 'success') {
       setTimeout("location.href='/Checked'", 100)
     } else {
       alert('註冊失敗')
+      return
       // location.href = '/login'
     }
   }

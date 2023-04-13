@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { HOST, CMMA } from '../../components/api_config'
+import { HOST, CMMA, } from '../../components/api_config'
 import { LOGIN } from '../../components/api_config'
 import { useState, useContext } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'

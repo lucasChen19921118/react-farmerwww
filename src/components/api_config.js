@@ -36,7 +36,7 @@ export const LOGIN = `${HOST}/login`
 //小農部落 所有文章API
 export const CMMA = `${HOST}/community/api`
 //小農部落 單筆文章API
-export const CMPData = `${HOST}/community/`
+export const CMPDATA = `${HOST}/community`
 export const CMPRE = `${HOST}/community/reply`
 
 //小農部落格 新增留言
