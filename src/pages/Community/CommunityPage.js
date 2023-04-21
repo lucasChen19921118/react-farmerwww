@@ -1,10 +1,15 @@
 import { HOST, CMMA, CMADD } from '../../components/api_config'
-import { useState, useContext, useEffect } from 'react'
+import { useState, useContext, useEffect, useRef } from 'react'
 import { useNavigate, useLocation, useParams } from 'react-router-dom'
 
 import axios from 'axios'
 import dayjs from 'dayjs'
 import AuthContext from '../../contexts/AuthContext'
+import {
+    ListMotionContainer,
+    ListMotionItem,
+} from '../../components/ListMotion'
+
 
 
 //引入樣式
@@ -22,6 +27,10 @@ function CommunityPage() {
     const { myAuth, logout } = useContext(AuthContext)
     const [isLoading, setIsLoading] = useState(true)
     const [myImg, setMyImg] = useState('')
+    const [messageID, setMessageID] = useState('')
+    const [backgroundURL, setbackgroundURL] = useState([123])
+
+    const messIDRef = useRef(null)
 
 
     const [CMPData, setCMPData] = useState({
@@ -32,6 +41,7 @@ function CommunityPage() {
     });
 
     const [newMessage, setNewMessage] = useState([]);
+    const [correctDelete, setcorrectDelete] = useState(false);
 
 
     const [formData, setFormData] = useState({
@@ -56,22 +66,27 @@ function CommunityPage() {
         })
     }
 
+   
     const handleImg = () => {
         const myAuth = JSON.parse(localStorage.getItem('myAuth'))
-        axios
-            .post(`${HOST}/memberImg/myImg`, {
-                headers: {
-                    Authorization: 'Bearer ' + myAuth.token,
-                },
-                myAuth: myAuth,
-            })
-            .then((response) => {
-                setMyImg(response.data.member_img)
-                console.log('Imgformdata', response.data.member_img)
-            })
-            .catch((error) => {
-                console.error(error)
-            })
+
+        if (myAuth !== null) {
+            axios
+                .post(`${HOST}/memberImg/myImg`, {
+                    headers: {
+                        Authorization: 'Bearer ' + myAuth.token,
+                    },
+                    myAuth: myAuth,
+                })
+                .then((response) => {
+                    setMyImg(response.data.member_img)
+                    console.log('Imgformdata', response.data.member_img)
+                })
+                .catch((error) => {
+                    console.error(error)
+                })
+        } else
+            return
     }
 
     const getCMPData = async () => {
@@ -97,23 +112,49 @@ function CommunityPage() {
         event.preventDefault();
 
         try {
-            const response = await axios.post('http://localhost:3033/community/sent', formData);
+            if (formData.message.length > 1) {
+                const response = await axios.post('http://localhost:3033/community/sent', formData);
+                console.log(response.data);
+                document.getElementById('cmReply').value = ""
+                setFormData({
+                    member_sid: myAuth.sid,
+                    community_sid: sid,
+                    message: "",
+                })
+                if (response.data.success = 'success') {
+                    setIsLoading(true)
+
+                    //送出留言後 重新取得資料
+                    const res = await axios.get(`http://localhost:3033/community/reply/${sid}`, {
+                        params: { sid }
+                    })
+                    setCMPREData(res.data)
+                }
+            } else {
+                return
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+
+    async function handleDeletemessage(event) {
+        const haha = messIDRef.target = event.target.id
+        const replymessage = { sid: haha }
+        console.log(replymessage)
+        try {
+            const response = await axios.post(`http://localhost:3033/community/delete`,
+                replymessage,
+                { headers: { Authorization: 'Bearer ' + myAuth.token } }
+            );
             console.log(response.data);
-            document.getElementById('cmReply').value = ""
-            setFormData({
-                member_sid: myAuth.sid,
-                community_sid: sid,
-                message: "",
-            })
             if (response.data.success = 'success') {
                 setIsLoading(true)
-
-                //送出留言後 重新取得資料
                 const res = await axios.get(`http://localhost:3033/community/reply/${sid}`, {
                     params: { sid }
                 })
                 setCMPREData(res.data)
-
             } else {
                 alert('錯誤！！')
                 return
@@ -124,50 +165,98 @@ function CommunityPage() {
     }
 
     const Message = (
-       
-        
-        <div
-            className="cm-pointer P-commnet-info cm-noshadow cm-replyray d-flex flex-column d-md-flex align-items-center gap-4"
-        >
-            {CMPRE.row2.length == 0 ?
-            <div className='d-flex justify-content-center align-items-center mt-5'>
-            <h3 className='text-success'>來新增第一篇留言吧！</h3>
-            </div>
-                :
-                    CMPRE.row2.map((v, i) => {
-                        return (
-                            <div
-                                key={v.sid}
-                                className="cm-pointer P-commnet-info cm-noshadow cm-replyray d-flex flex d-md-flex align-items-center"
-                            >
-                                <div className="P-commnet-avatar d-flex flex-column  align-items-center gap-2">
-                                    <div>
-                                        <img
-                                            src={
-                                                v.member_img
-                                                    ? `${HOST}/images/avatar/${v.member_img}`
-                                                    : `${HOST}/images/avatar/none.png`
-                                            }
-                                            alt=""
-                                        />
-                                    </div>
-                                    <span>{v.member_name || '匿名'}</span>
-                                </div>
-                                <div className="P-commnet-text cm-replay-area-inner d-flex flex-column align-items-center justify-content-center w-100">
-                                    <div className='d-flex flex-column justify-content-center align-items-center'>
-                                        <span className='w-100'>{v.message}</span>
-                                        <span>
-                                            {dayjs(v.message_created_at).format('YYYY/MM/DD')}
-                                        </span>
-                                    </div>
+        <ListMotionContainer element="div" className="row lm-w">
+            <div
+                className="cm-pointer  cm-noshadow cm-replyray d-flex flex-column d-md-flex align-items-center  justify-content-center gap-4"
+
+            >
+                {CMPRE.row2.length == 0 ?
+
+                    <div className='d-flex justify-content-center P-commnet-info align-items-center cm-hinet mt-2'>
+                        {myAuth.sid ?
+                            <h3 className='text-success'>
+                                快來與作者一同互動吧！
+                            </h3>
+                            :
+                            <div className='d-flex flex-wrap justify-content-center align-items-center'>
+                                <h3 className='text-success'>目前還沒有回覆</h3>
+                                <h3 className='text-success'>登入會員參加討論吧！</h3>
+                                <div className="P-rabbit ps-5 d-none d-md-block position-absolute">
+                                    <img src="./../../Images/ProductRabbit.png" width="200px" alt="" />
                                 </div>
                             </div>
+
+                        }
+
+                    </div>
+                    :
+                    CMPRE.row2.map((v, i) => {
+                        return (
+                            <ListMotionItem
+                                element="div"
+                                noShift
+                                key={v.sid}
+                                className="d-flex flex-wrap justify-content-center gap-5 mt-2"
+                            >
+                                <div
+                                    key={v.sid}
+                                    className="cm-pointer P-commnet-info cm-noshadow cm-replyray d-flex flex d-md-flex align-items-center"
+                                >
+                                    <div className="P-commnet-avatar d-flex flex-column  align-items-center gap-2">
+                                        <div>
+                                            <img
+                                                src={
+                                                    v.member_img
+                                                        ? `${HOST}/images/avatar/${v.member_img}`
+                                                        : `${HOST}/images/avatar/none.png`
+                                                }
+                                                alt=""
+                                            />
+                                        </div>
+                                        <span>{v.member_name || '匿名'}</span>
+                                    </div>
+                                    <div className="P-commnet-text cm-replay-area-inner d-flex flex-column align-items-center justify-content-center w-100">
+                                        <div className='d-flex flex-column justify-content-center align-items-center'>
+                                            <span className='w-100'>{v.message}</span>
+                                            <span>
+                                                {dayjs(v.message_created_at).format('YYYY/MM/DD')}
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        {v.member_sid == myAuth.sid ?
+                                            <div
+                                                className="MB-table-btn me-md-3 ms-auto ms-md-0 cm-send d-flex justify-content-center align-items-center p-2
+                                            "
+                                                ref={messIDRef}
+                                                id={v.sid}
+                                                value={v.sid}
+
+                                                onClick={(event) => { handleDeletemessage(event) }}
+
+
+                                            >
+
+
+                                                <i id={v.sid}
+                                                    className="fa-regular fa-trash-can">
+                                                </i>
+
+                                            </div>
+                                            :
+                                            ""
+                                        }
+                                    </div>
+                                </div>
+
+                            </ListMotionItem>
                         )
                     })
-                
+
                 }
-           
-        </div>
+
+            </div>
+        </ListMotionContainer>
     )
 
     useEffect(() => {
@@ -180,18 +269,24 @@ function CommunityPage() {
     }, [])
 
     useEffect(() => {
+        if (messIDRef.current) {
+            console.log("REF", messIDRef.current.id)
+        }
+    }, [messageID])
+
+    useEffect(() => {
         if (isLoading) {
             setTimeout(() => {
                 setIsLoading(false)
             }, Math.random() * 1500)
         }
-    }, [isLoading, CMPRE])
+    }, [isLoading])
 
 
 
     useEffect(() => {
         setIsLoading(true)
-    }, [newMessage, CMPRE])
+    }, [newMessage, CMPRE, backgroundURL,])
 
     useEffect(() => {
         handleImg()
@@ -201,7 +296,7 @@ function CommunityPage() {
     }, [])
 
     const loader = (
-        <div className="lds-ripple">
+        <div className="lds-ripple d-flex justify-content-center">
             <div></div>
             <div></div>
             <div></div>
@@ -214,7 +309,25 @@ function CommunityPage() {
     )
 
     return (
-        <div className='m-session d-flex justify-content-center pb-5  cm-session cm-re-m '>
+        <div className=' d-flex justify-content-center pb-5 cm-session cm-re-m'
+        >
+            
+            {CMPData.row.map(row => (
+                <div
+                    className='freeBG'
+                    key={row.sid}>
+                    <img
+                        className='fade-in bgI'
+                        style={{
+                            backgroundImage: `url(http://localhost:3033/images/community/${row.community_picture1})`,
+                            backgroundSize: "cover",
+                            backgroundPosition: "center",
+                            padding: "10px"
+                        }}
+                    ></img>
+                </div>
+
+            ))}
             {/* 功能列 */}
             <div className='cm-container d-flex flex-column  col-10 h-100 mt-4'>
                 <div className='w-100 d-flex justify-content-between'>
@@ -226,6 +339,7 @@ function CommunityPage() {
                             <p className='cm-pbt'>我的文章</p>
                         </div>
                     </div>
+
                     <div className='cm-select-bar  d-flex justify-align-content-between align-items-center gap-2 mt-3 ms-2 me-2 text-center d-none '>
                         <div className='cm-select-bar-btn  d-flex justify-content-center align-items-center'>
                             <p>文章排列方式:</p>
@@ -242,20 +356,24 @@ function CommunityPage() {
 
                 {/* 文章卡片 */}
                 {/* 擺放卡片位置的地方vvvv */}
-                <div className="d-flex position-absolute cm-back">
-                    <div
-                        onClick={() => {
-                            navigate(-1)
-                        }}
-                    >
-                        <button className="M-back"></button>
+                <div className='cm-artical-session w-100 d-flex justify-content-center align-items-start mt-3 col-12 h-100 position-relative  gap-5 flex-wrap'>
+                    
+                    <div className="d-flex position-absolute cm-back">
+                        <div
+                            onClick={() => {
+                                navigate(-1)
+                            }}
+                        >
+                            <button className="M-back"></button>
+                        </div>
                     </div>
-                </div>
-                <div className='cm-artical-session w-100 d-flex justify-content-center align-items-start mt-3 col-12 h-100  gap-5 flex-wrap'>
                     {CMPData.row.map(row => (
-                        <div key={row.sid} className='cm-artical-card3 mt-1'>
+                        <div key={row.sid} className='cm-artical-card3 mt-4'>
                             <div className='cm-artical-innerimg' >
-                                <img src={`${HOST}/images/community/` + `${row.community_picture1}`}></img>
+                                <img
+                                    id='newback'
+                                    src={`${HOST}/images/community/` + `${row.community_picture1}`}></img>
+
                             </div>
                             <div className='cm-member-info w-100 cm-noshadow d-flex align-items-end ms-3'>
                                 <div className='cm-member-ava'>
@@ -300,7 +418,7 @@ function CommunityPage() {
                             </div>
 
                             {/* 文章 */}
-                            <div className='cm-arti-show d-flex justify-content-around w-100 h-100 bg-white'>
+                            <div className='cm-arti-show d-flex justify-content-around w-100 h-100 bg-white cm-arti-change'>
                                 <div className='cm-artical-contain-area w-100 h-100 bg-white d-flex'>
                                     <div className='cm-artical2 ms-5 me-5 mt-4 w-100'>
                                         <h3>{row.community_header}</h3>
@@ -320,12 +438,13 @@ function CommunityPage() {
                     {/* 文章卡片 */}
 
                     {/* 文章回覆 */}
-                    <div className='d-flex flex-column gap-3 h-25 cm-artical2 cm-replay-area'>
-                        {/* 用戶回覆區 */}
+                    <div className='d-flex flex-column cm-artical2 align-items-center cm-replay-area cm-b-shodow'>
                         {myAuth.authorized ?
-                            <form onSubmit={handleSubmit}>
+                            <form
+                                className='d-flex justify-content-center'
+                                onSubmit={handleSubmit}>
                                 <div
-                                    className="cm-pointer cm-input cm-noshadow cm-replay-area-inner cm-replyray d-flex flex d-md-flex align-items-center"
+                                    className="cm-pointer cm-input cm-noshadow cm-replay-area-inner d-flex flex d-md-flex align-items-center"
                                 >
                                     <div className="P-commnet-avatar cm-replay-area-inner d-flex flex-column  align-items-center gap-2">
                                         <div>
@@ -339,7 +458,7 @@ function CommunityPage() {
                                         </div>
                                         <span>{myAuth.member_name}</span>
                                     </div>
-                                    <div className="P-commnet-text d-flex flex-column align-items-center justify-content-center h-auto">
+                                    <div className="P-commnet-text d-flex flex-column align-items-center justify-content-center">
                                         <div className='d-flex flex-column justify-content-end align-items-end'>
                                             <textarea
                                                 id="cmReply"
@@ -371,8 +490,8 @@ function CommunityPage() {
                                     </div>
                                 </div>
                             </form> : ""}
-
-                        {isLoading ? loader : Message}
+                        {/* 用戶回覆區 */}
+                        {Message}
 
                     </div>
 

@@ -1,6 +1,5 @@
 import React from 'react'
 import { useState, useEffect, useRef } from 'react'
-import { useForm } from "react-hook-form";
 import { Navigate } from 'react-router-dom'
 import { HOST } from '../../components/api_config'
 import avaUploader from '../../components/avaUploader'

@@ -136,7 +136,7 @@ const LOCATION_NAME_FORECAST = '臺北市'
 
 const fetchCurrentWeather = () => {
   return fetch(
-    `https://opendata.cwb.gov.tw/api/v1/rest/datastore/O-A0003-001?Authorization=${AUTHORIZATION_KEY}&locationName=${LOCATION_NAME}`
+    `https://opendata.cwb.gov.tw/api/v1/rest/datastore/O-A0003-001?Authorization=&locationName=${LOCATION_NAME}`
   )
     .then((response) => response.json())
     .then((data) => {
@@ -162,7 +162,7 @@ const fetchCurrentWeather = () => {
 }
 const fetchWeatherForecast = () => {
   return fetch(
-    `https://opendata.cwb.gov.tw/api/v1/rest/datastore/F-C0032-001?Authorization=${AUTHORIZATION_KEY}&locationName=${LOCATION_NAME_FORECAST}`
+    `https://opendata.cwb.gov.tw/api/v1/rest/datastore/F-C0032-001?Authorization=&locationName=${LOCATION_NAME_FORECAST}`
   )
     .then((response) => response.json())
     .then((data) => {

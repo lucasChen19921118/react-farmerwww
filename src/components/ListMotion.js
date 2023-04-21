@@ -7,7 +7,7 @@ import React from 'react'
 export const containerVariants = {
   show: {
     transition: {
-      staggerChildren: 0.2, //控制每個子項目的開始動作時間
+      staggerChildren: 0.5, //控制每個子項目的開始動作時間
       delayChildren: 0.05, //控制整個子項目的開始動作時間
     },
   },
@@ -25,7 +25,7 @@ export const itemVariants = {
     x: 50, // 向右位移50
     transition: {
       ease: 'easeOut',
-      duration: 0.3, //撥放0.3s
+      duration: 1, //撥放0.3s
     },
   },
 }

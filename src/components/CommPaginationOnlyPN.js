@@ -2,7 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 
 
-function CommPagination({ queryObj, page, totalPages}) {
+function CommPaginationOnlyPN({ queryObj, page, totalPages}) {
   const navigate = useNavigate();
   const qo = { ...queryObj }
 
@@ -67,4 +67,4 @@ function CommPagination({ queryObj, page, totalPages}) {
   );
 }
 
-export default CommPagination;
+export default CommPaginationOnlyPN;

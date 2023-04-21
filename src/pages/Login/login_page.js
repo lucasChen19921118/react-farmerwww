@@ -91,10 +91,10 @@ function Login() {
               </div>
             </label>
             <div className="login-main-full col-12 d-flex  justify-content-center  mt-3">
-              <div className="log-join-card2 login-hiddend-card col-5  ">
+              <div className="log-join-card2 login-hiddend-card col-5 lg-size">
                 <div className="swiper-wrapper ">
                   <div className="swiper-slide slide-change d-flex justify-content-center align-items-start mt-5 login-left col-12">
-                    <div className="mt-4 w-75">
+                    <div className="mt-4 w-75 ">
                       <div className="input-group-1 d-block justify-content-center h-100 mt-5 ms-4">
                         <span className="login-span join-manin-head fs-2 mb-5 mt-5 ">
                           登入
