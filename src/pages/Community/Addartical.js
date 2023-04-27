@@ -32,6 +32,10 @@ function AddArtical() {
     }
   };
 
+  const handleFileClearimg = () => {
+    setImagePreview(null);
+  };
+
   const [formData, setFormData] = useState({
   });
 
@@ -73,9 +77,10 @@ function AddArtical() {
       const res2 = await axios.post(`${CMPDATA}/new/api`,
         { ...formData2, url: res.data },
       )
-      console.log(res2.data);
+      console.log("res2:",res2.data);
       if (res2.data.success = 'success') {
-        // navigate('community')
+        navigate('/community/')
+        navigate(`/community/${res2.data.result.insertId}`)
         console.log(formData);
       } else {
         return
@@ -146,19 +151,25 @@ function AddArtical() {
                 <div className='cm-img-area2 d-flex justify-content-center align-items-center'>
                   <div className={`cm-artical-innerimg2 ${imagePreview ? "add" : ""}`} >
                     {imagePreview ?
-                      <img className='cm-preimage' src={imagePreview}></img>
+                      <div>
+                        <img className='cm-preimage' src={imagePreview}></img>
+                        <img className='cm-addp cm-addp-position2 cm-pointer' src='http://localhost:3000/Icons/delete.png'
+                          onClick={handleFileClearimg}
+                        ></img>
+                      </div>
                       :
                       <div className='position-relative cm-imge-pre-container '>
-                        
+
                         <input
-                          className='position-absolute cm-hide-upload z-1 '
+                          className='position-absolute cm-hide-upload z-1 cm-pointer '
                           type="file"
+                          accept='image/*'
                           onChange={
                             handleFileInputChange
                           }>
                         </input>
                         <img className='cm-addp cm-addp-position' src='http://localhost:3000/Icons/add.png'></img>
-                     
+
                       </div>
                     }
                   </div>
@@ -185,7 +196,7 @@ function AddArtical() {
                       </input>
                     </div>
                     <div className='cm-headder-input cm-comment-area cm-like-span d-flex'>
-                      
+
                       <textarea
                         className='w-100   ms-4 me-4 cm-like-span mt-2 '
                         rows="5" cols="33"
@@ -197,7 +208,7 @@ function AddArtical() {
                       >
                       </textarea>
                     </div>
-                    
+
                   </div>
                   <span className='cm-artical cm-left-text fw-bolder position-absolute cm-input-hint'>
                     {formData2.message.length > 0 ? formData2.message.length < 100 ?

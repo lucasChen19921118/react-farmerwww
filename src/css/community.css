@@ -12,8 +12,8 @@
   top: 20px !important;
 }
 
-.lg-size{
-   height: 700px !important; 
+.lg-size {
+  height: 700px !important;
 }
 
 .cm-artical-card {
@@ -147,10 +147,10 @@
   object-fit: cover;
 }
 
-.cm-input-hint{
-    top: 490px !important;
-    left: 360px !important;
-    transition: .5s;
+.cm-input-hint {
+  top: 490px !important;
+  left: 360px !important;
+  transition: 0.5s;
 }
 
 .cm-like-span {
@@ -171,7 +171,7 @@
 
 .cm-artical3 {
   font-family: GenSenRoundedTW-M;
-  color: #A35D73;
+  color: #a35d73;
 }
 
 .cm-left-text {
@@ -309,12 +309,11 @@
 
   to {
     opacity: 1; /* 结束时透明度为 1 */
-  
   }
 }
 
 .cm-show-effect {
-  animation: Showof .5s ease-in-out; /* 动画名称，持续时间和动画速度 */
+  animation: Showof 0.5s ease-in-out; /* 动画名称，持续时间和动画速度 */
 }
 
 .cm-img-area {
@@ -355,7 +354,7 @@
   justify-content: center;
   align-items: center;
   transition: 0.5s;
-  
+
   background-color: #a8868667;
 }
 
@@ -377,16 +376,34 @@
   height: 50px;
 }
 
-.cm-addp-position{
-    position: absolute;
-    top: 135px;
-    left: 50px;
+.cm-addp-position {
+  position: absolute;
+  top: 135px;
+  left: 50px;
+}
+
+.cm-addp-position2 {
+  position: absolute;
+  top: 140px;
+  left: 220px;
+  opacity: 0;
+  transition: 0.5s;
 }
 
 .cm-addp:hover {
   width: 50px;
   height: 50px;
   opacity: 0.8;
+}
+
+.cm-preimage:hover + .cm-addp-position2 {
+  opacity: 0.5;
+  transition: 0.5s;
+}
+
+.cm-addp-position2:hover {
+  opacity: 1;
+  transition: 0.5s;
 }
 
 .cm-headder-input {
@@ -412,39 +429,35 @@
   font-size: 20px;
 }
 
-.cm-artical-card:hover{
-    height: 535px;
-    box-shadow:3px 3px 5px rgb(255, 231, 186) ;
-    bottom:20px;
-    transition: 0.5s;
-    
+.cm-artical-card:hover {
+  height: 535px;
+  box-shadow: 3px 3px 5px rgb(255, 231, 186);
+  bottom: 20px;
+  transition: 0.5s;
 }
-
-
 
 .cm-comment-area {
   width: 384px;
   height: 125px;
 }
 
-.cm-summit-area{
-box-shadow: none !important;
-padding: 0 !important;
+.cm-summit-area {
+  box-shadow: none !important;
+  padding: 0 !important;
 }
 
 .cm-summit-area > img {
   width: 150px;
   height: 45px;
   padding: 0px !important;
-  transition: .1s;
+  transition: 0.1s;
 }
 
 .cm-summit-area > img:hover {
   width: 150px;
   height: 45px;
   filter: sepia(1);
-  transition: .1s;
-  
+  transition: 0.1s;
 }
 
 .cm-card-close {
@@ -465,9 +478,9 @@ padding: 0 !important;
   height: auto;
 }
 
-.lm-w{
-width: auto !important;
-max-width: 480px !important;
+.lm-w {
+  width: auto !important;
+  max-width: 480px !important;
 }
 
 .cm-replyray {
@@ -490,7 +503,6 @@ max-width: 480px !important;
 .cm-replay-area::-webkit-scrollbar {
   display: none;
 }
-
 
 .cm-replay-area-inner {
   height: 150px;
@@ -659,7 +671,6 @@ max-width: 480px !important;
     padding: 0px !important;
   }
 }
-
 
 ::-webkit-scrollbar {
   /* 宽度 */

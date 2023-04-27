@@ -25,7 +25,7 @@ export const itemVariants = {
     x: 50, // 向右位移50
     transition: {
       ease: 'easeOut',
-      duration: 1, //撥放0.3s
+      duration: 0.3, //撥放0.3s
     },
   },
 }
