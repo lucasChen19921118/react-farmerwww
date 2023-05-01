@@ -171,7 +171,7 @@
 
 .cm-artical3 {
   font-family: GenSenRoundedTW-M;
-  color: #a35d73;
+  color: #a88686;
 }
 
 .cm-left-text {
@@ -297,9 +297,23 @@
   }
 }
 
+@keyframes fadeIn3 {
+  from {
+    opacity: 0; /* 起始时透明度为 0 */
+  }
+
+  to {
+    opacity: 1; /* 结束时透明度为 1 */
+  }
+}
+
 /* 定义动画 */
 .fade-in {
   animation: fadeIn 1s ease-in-out; /* 动画名称，持续时间和动画速度 */
+}
+
+.fade-in3 {
+  animation: fadeIn3 .3s ease-in-out; /* 动画名称，持续时间和动画速度 */
 }
 
 @keyframes Showof {
@@ -655,6 +669,97 @@
   border-radius: 20px;
 }
 
+.cm-h-full {
+  height: 800px;
+}
+
+.cm-margin-top {
+  margin-top: 80px;
+}
+
+.C-Order-t2::before {
+  content: "我的文章(" attr(data-count) ")";
+  background: url("../../public/Textures/buttonYsub.png");
+  width: 200px;
+  height: 65px;
+  position: absolute;
+  top: 0px;
+  left: 60px;
+  text-align: center;
+  padding-top: 15px;
+  font-size: clamp(1.1rem, 2.2vw, 1.25rem);
+  letter-spacing: 0.2em;
+  color: rgb(136, 78, 78);
+  font-family: GenSenRoundedTW-B;
+  border-radius: 20px 20px 0px 0px;
+}
+
+.cm-label {
+  top: 25px;
+  left: 0px;
+  z-index: 1;
+}
+
+.cm-back2 {
+  position: absolute;
+  top: 10px;
+  left: 15px;
+}
+
+.cm-myImg {
+  width: 80px;
+  height: 60px;
+  background-position: center;
+}
+
+.cm-myImg > img {
+  width: 80px;
+  height: 60px;
+  background-position: center;
+  object-fit: cover;
+  border-radius: 20px;
+}
+
+.cm-index{
+  width: 100px;
+  padding-right: 20px;
+}
+
+.cm-headder-input3 {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.cm-artical-border{
+  border-bottom: 3px solid #FDF4DC;
+
+}
+
+.cm-modal{
+  position: absolute;
+  background-color: #ffffff;
+  width: 600px;
+  height: 640px;
+  top: 230px;
+  right: 300px;
+  opacity: 1;
+  border-radius: 20px;
+  z-index: 2;
+
+}
+
+.cm-closeW{
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  border-radius: 50%;
+  width: 30px;
+  height: 31px;
+}
+
+
+
 @media (max-width: 700px) {
   .cm-hide {
     display: none;
@@ -665,6 +770,12 @@
     top: 10px;
     left: -35px;
   }
+
+  .cm-headder-input3 {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
 
   .cm-margin {
     margin: 0px !important;

@@ -475,6 +475,11 @@
 .C-Order-t {
   position: relative;
 }
+
+.C-Order-t2 {
+  position: relative;
+}
+
 .C-Order-t::before {
   content: '我的訂單(' attr(data-count) ')';
   background: url('../../public/Textures/cart-cate-p.svg');
@@ -490,6 +495,8 @@
   letter-spacing: 0.2em;
   color: rgb(136, 78, 78);
 }
+
+
 
 .M-C-back-Contain {
   width: 551px;

@@ -49,6 +49,7 @@ import MyAwardsLeft from './pages/Member/MyAwardsLeft'
 import Community from './pages/Community/Community'
 import CommunityPage from './pages/Community/CommunityPage'
 import AddArtical from './pages/Community/Addartical'
+import MyArtical from './pages/Community/MyArtical'
 
 import Navbar from './pages/Index/Navbar'
 import Footer from './pages/Index/Footer'
@@ -112,6 +113,12 @@ function App() {
               <Route path="/Community" element={<Community />} />
               <Route path="/Community/:sid" element={<CommunityPage />} />
               <Route path="/AddArtical" element={<AddArtical />} />
+              
+              <Route path="/MyArtical" index element={<MyArtical />} />
+              <Route path="MyComment" element={<MyCommentLeft />} />
+            
+
+
             </Routes>
             <Footer />
           </AuthContextProvider>

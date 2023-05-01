@@ -261,7 +261,7 @@ function Community() {
                             <a href='/AddArtical'><p className='cm-pbt'>發表新文章</p></a>
                         </div>
                         <div className='cm-select-bar-btn d-flex justify-content-center align-items-center'>
-                            <p className='cm-pbt'>我的文章</p>
+                            <a href='/MyArtical'><p className='cm-pbt'>我的文章</p></a>
                         </div>
                     </div>
                     {cmmData.totalRows !== 0 ?
